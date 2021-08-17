@@ -2,6 +2,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as cp from 'child_process';
 import * as vscode from 'vscode';
+import * as toml from 'toml';
 
 export class PyProjectTaskProvider implements vscode.TaskProvider {
 	static PoetryType = 'poetry';
@@ -126,9 +127,12 @@ async function getTasks(buildType: string): Promise<vscode.Task[]> {
 		
 		try {
 			vscode.workspace.openTextDocument(path.join(folderString, 'pyproject.toml')).then((document) => {
-				let text = document.getText();
-				// Add builtin tasks for buildType if given buildType is found
-				if (text && text.search(`\\[tool\\.${buildType}`) !== -1) {
+				const text = document.getText();
+				const pyproject = toml.parse(text);
+
+				// If pyproject.tool[buildType] exists, add built-in tasks
+				// The line in the toml would be [tool.`buildType`]
+				if (pyproject?.tool?.[buildType] !== undefined) {
 					getBuiltinTasks(buildType).forEach(taskName => {
 						const kind: PyProjectTaskDefinition = {
 							type: buildType,
