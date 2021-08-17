@@ -6,13 +6,23 @@
 	"engines": {
 		"vscode": "^1.52.0"
 	},
-	"repository": {"type": "github", "url": "https://github.com/tonybaloney/python-task-provider"},
+	"repository": {
+		"type": "github",
+		"url": "https://github.com/tonybaloney/python-task-provider"
+	},
 	"publisher": "tonybaloney",
-	"extensionDependencies": ["vscode.python"],
+	"extensionDependencies": [
+		"vscode.python"
+	],
 	"categories": [
 		"Other"
 	],
-	"keywords": ["python", "task", "setuptools", "django"],
+	"keywords": [
+		"python",
+		"task",
+		"setuptools",
+		"django"
+	],
 	"license": "MIT",
 	"icon": "icon.png",
 	"activationEvents": [
@@ -23,18 +33,18 @@
 		"configuration": {
 			"title": "PythonTaskProvider",
 			"properties": {
-			  "pythonTaskProvider.runSetupToolsToDiscoverOptions": {
-				"type": "boolean",
-				"default": false,
-				"description": "Run setup.py --help-commands to discover extra commands. Caution, do not enable this for untrusted projects."
-			  },
-			  "pythonTaskProvider.runDjangoToDiscoverOptions": {
-				"type": "boolean",
-				"default": false,
-				"description": "Run manage.py --help to discover extra commands. Caution, do not enable this for untrusted projects."
-			  }
+				"pythonTaskProvider.runSetupToolsToDiscoverOptions": {
+					"type": "boolean",
+					"default": false,
+					"description": "Run setup.py --help-commands to discover extra commands. Caution, do not enable this for untrusted projects."
+				},
+				"pythonTaskProvider.runDjangoToDiscoverOptions": {
+					"type": "boolean",
+					"default": false,
+					"description": "Run manage.py --help to discover extra commands. Caution, do not enable this for untrusted projects."
+				}
 			}
-		  },
+		},
 		"taskDefinitions": [
 			{
 				"type": "setuptools",
