@@ -99,25 +99,35 @@ function getBuiltinTasks(type: string): Array<string> {
 async function getTasks(buildType: string): Promise<vscode.Task[]> {
 	const workspaceFolders = vscode.workspace.workspaceFolders;
 	const result: vscode.Task[] = [];
+	
+	// No workspace folder
 	if (!workspaceFolders || workspaceFolders.length === 0) {
 		return result;
 	}
+
 	for (const workspaceFolder of workspaceFolders) {
 		const folderString = workspaceFolder.uri.fsPath;
+		// Skip empty folder names
 		if (!folderString) {
 			continue;
 		}
+
+		// Get pyproject.toml
 		const pyprojectTomlFile = path.join(folderString, 'pyproject.toml');
 		if (!await exists(pyprojectTomlFile)) {
 			continue;
 		}
+
+		// Get python path from config
         var pythonPath = vscode.workspace.getConfiguration('python').get('pythonPath');
         if (!pythonPath){
             pythonPath = 'python';
         }
+		
 		try {
 			vscode.workspace.openTextDocument(path.join(folderString, 'pyproject.toml')).then((document) => {
 				let text = document.getText();
+				// Add builtin tasks for buildType if given buildType is found
 				if (text && text.search(`\\[tool\\.${buildType}`) !== -1) {
 					getBuiltinTasks(buildType).forEach(taskName => {
 						const kind: PyProjectTaskDefinition = {
@@ -127,6 +137,7 @@ async function getTasks(buildType: string): Promise<vscode.Task[]> {
 						const task = new vscode.Task(kind, workspaceFolder, taskName, buildType, new vscode.ShellExecution(`${pythonPath} -m ${buildType} ${taskName}`));
 						result.push(task);
 
+						// Group build tasks
 						if (taskName === "build") {
 							task.group = vscode.TaskGroup.Build;
 						}
